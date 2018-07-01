@@ -11,24 +11,20 @@ import Alamofire
 import SwiftyJSON
 
 class SecondViewController: UIViewController {
+    
+    let button = UIButton(type: UIButtonType.system)
+    static var dCPU="CPU"
 
     //@IBOutlet weak var apiout: UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let button = UIButton(type: UIButtonType.system)
-        // ボタンを押した時に実行するメソッドを指定
-        button.addTarget(self, action: #selector(self.goNext(_:)), for: UIControlEvents.touchUpInside)
-        // ラベルを設定する
-        button.setTitle("CPU", for: UIControlState.normal)
-        // 位置を決める
-        button.frame = CGRect(x:view.frame.width*0.05, y:view.frame.height*0.1,
-                              width:view.frame.width*0.9, height:view.frame.height*0.15)
-        button.backgroundColor=UIColor(red: 0/255, green: 249/255, blue: 213/255, alpha: 1.0)
-        button.setTitleColor(UIColor.black, for: UIControlState.normal)
-        button.layer.cornerRadius = 5.0
-        // viewに追加する
-        self.view.addSubview(button)
+        createbuttons()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.viewWillAppear(_:)),
+            name: NSNotification.Name("willResignActive"),
+            object: nil
+        )
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,12 +41,26 @@ class SecondViewController: UIViewController {
     
     @IBAction func goNext(_ sender:UIButton) {
         let next = storyboard!.instantiateViewController(withIdentifier: "cpuview")
-        self.present(next,animated: true, completion: nil)
+        self.present(next,animated: false, completion: nil)
     }
     
-    func update(){
-        
+    func createbuttons(){
+        // ボタンを押した時に実行するメソッドを指定
+        button.addTarget(self, action: #selector(self.goNext(_:)), for: UIControlEvents.touchUpInside)
+        // ラベルを設定する
+        button.setTitle("CPU", for: UIControlState.normal)
+        // 位置を決める
+        button.frame = CGRect(x:view.frame.width*0.05, y:view.frame.height*0.1,
+                              width:view.frame.width*0.9, height:view.frame.height*0.15)
+        button.backgroundColor=UIColor(red: 0/255, green: 249/255, blue: 213/255, alpha: 1.0)
+        button.setTitleColor(UIColor.black, for: UIControlState.normal)
+        button.layer.cornerRadius = 5.0
+        // viewに追加する
+        self.view.addSubview(button)
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        button.setTitle(SecondViewController.dCPU, for: .normal)
+    }
 }
 

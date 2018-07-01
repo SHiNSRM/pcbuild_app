@@ -12,6 +12,7 @@ import SwiftyJSON
 class showCPUViewController: UIViewController {
 
     //@IBOutlet weak var cpuout: UILabel!
+    var savejson: JSON=[]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +25,7 @@ class showCPUViewController: UIViewController {
         var i=0
         SecondViewController().getdata({ json in
             //self.cpuout.text=""
+            self.savejson=json
             while true {
                 if(i>15){
                     break
@@ -55,6 +57,7 @@ class showCPUViewController: UIViewController {
                 //label.backgroundColor = UIColor.white
                 label.adjustsFontSizeToFitWidth = true
                 label.textColor=UIColor.darkGray
+                label.tag=i
                 self.view.addSubview(label)
                 i+=1
             }
@@ -73,6 +76,9 @@ class showCPUViewController: UIViewController {
     }
     @objc func buttonEvent(_ sender: UIButton) {
         print("ボタンの情報: \(sender.tag)")
+        //SecondViewController.receive(tmp: savejson["name"][sender.tag].stringValue)
+        SecondViewController.dCPU=self.savejson["name"][sender.tag].stringValue
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "willResignActive"), object: nil)
         dismiss(animated: true, completion: nil)
     }
 
